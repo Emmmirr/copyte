@@ -16,7 +16,7 @@ const fileInputRef = ref(null)
 
 // Modal de exportación
 const isExportModalOpen = ref(false)
-const exportScope = ref('all') // 'all' o 'current'
+const exportScope = ref('all')
 
 // ================= CAMPOS DISPONIBLES =================
 const availableFieldTypes = [
@@ -495,14 +495,15 @@ const focusFirstFormField = () => {
 
 // ================= CARGAR AL INICIAR =================
 onMounted(() => {
-  const saved = localStorage.getItem('mis_plantillas_v14')
+  const saved = localStorage.getItem('mis_plantillas_v15')
   if (saved) {
     templates.value = JSON.parse(saved)
   } else {
+    // Plantilla inicial simple y minimalista
     templates.value = [
       {
-        title: 'Confirmación de Pedido',
-        content: 'Hola {{texto:nombre_cliente}},\nTu pedido de {{texto:producto}} por un total de {{dinero:total}} ha sido confirmado.\nEl método seleccionado es {{opciones:metodo_pago:Efectivo,Tarjeta,Transferencia:Tarjeta}} con fecha de entrega para el {{fecha:entrega}} a las {{hora:horario}} con {{numero:paquetes}} paquetes.\n¡Gracias por tu compra!'
+        title: 'Plantilla de Ejemplo',
+        content: 'Hola {{texto:nombre}}, escribe tu mensaje aquí...'
       }
     ]
     saveToLocalStorage()
@@ -515,7 +516,7 @@ onMounted(() => {
 })
 
 const saveToLocalStorage = () => {
-  localStorage.setItem('mis_plantillas_v14', JSON.stringify(templates.value))
+  localStorage.setItem('mis_plantillas_v15', JSON.stringify(templates.value))
 }
 
 watch(() => templates.value, () => saveToLocalStorage(), { deep: true })
@@ -684,7 +685,7 @@ const copyClipboard = async () => {
 
     <div class="w-full max-w-[1350px] h-[90vh] bg-white rounded-[2.5rem] shadow-2xl overflow-hidden flex relative">
       
-      <!-- ================= 1. BARRA LATERAL IZQUIERDA ================= -->
+      <!-- ================= 1. BARRA LATERAL IZQUIERDA (PLANTILLAS + IMPORT/EXPORT) ================= -->
       <aside 
         class="bg-[#f9fafc] border-r border-slate-100 flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out relative z-10 overflow-hidden"
         :class="isSidebarOpen ? 'w-80' : 'w-0'"
@@ -934,7 +935,7 @@ const copyClipboard = async () => {
                 <input 
                   v-model="currentTemplate.title" 
                   class="w-full text-xl font-bold text-slate-800 bg-slate-50/70 border border-slate-200/80 rounded-2xl px-5 py-3 outline-none focus:bg-white focus:ring-2 focus:ring-slate-200 transition-all placeholder-slate-300"
-                  placeholder="Ej: Confirmación de Pedido"
+                  placeholder="Ej: Mensaje de bienvenida"
                 />
               </div>
 
@@ -1006,7 +1007,7 @@ const copyClipboard = async () => {
 
     </div>
 
-    <!-- ================= MODAL DE EXPORTACIÓN (TODAS O SELECCIONADA) ================= -->
+    <!-- ================= MODAL DE EXPORTACIÓN ================= -->
     <div 
       v-if="isExportModalOpen"
       class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4 transition-all"
@@ -1148,7 +1149,7 @@ const copyClipboard = async () => {
       </div>
     </div>
 
-    <!-- ================= NOTIFICACIÓN TOAST (SIN TEXTO DE TIEMPO, SOLO BARRA INFERIOR) ================= -->
+    <!-- ================= NOTIFICACIÓN TOAST ================= -->
     <div 
       class="fixed bottom-8 right-8 z-50 transition-all duration-300 transform"
       :class="toast.show ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0 pointer-events-none'"
@@ -1198,7 +1199,6 @@ const copyClipboard = async () => {
           </div>
         </div>
 
-        <!-- Barra inferior que disminuye de forma limpia -->
         <div 
           v-if="toast.autoClose" 
           class="h-1 bg-emerald-500 transition-all ease-linear"
